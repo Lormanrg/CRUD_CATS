@@ -13,10 +13,10 @@ export class CatsService {
     private readonly catRepository: Repository<Cat>,
 
     @InjectRepository(Breed)
-    private readonly breadRepository: Repository<Breed>,
+    private readonly breedRepository: Repository<Breed>,
   ) {}
   async create(createCatDto: CreateCatDto) {
-    const breed = await this.breadRepository.findOneBy({
+    const breed = await this.breedRepository.findOneBy({
       name: createCatDto.breed,
     });
 

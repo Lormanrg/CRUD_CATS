@@ -20,14 +20,14 @@ export class BreedsService {
   }
 
   async findOne(id: number) {
-    return await `This action returns a #${id} breed`;
+    return `This action returns a #${id} breed`;
   }
 
   async update(id: number, updateBreedDto: UpdateBreedDto) {
-    return await `This action updates a #${id} breed`;
+    return `This action updates a #${id} breed`;
   }
 
   async remove(id: number) {
-    return await `This action removes a #${id} breed`;
+    return `This action removes a #${id} breed`;
   }
 }
