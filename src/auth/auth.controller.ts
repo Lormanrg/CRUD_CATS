@@ -8,6 +8,7 @@ import { Roles } from './decorators/roles.decorators';
 import { RolesGuard } from './guards/roles.guard';
 import { Role } from '../common/enums/rol.enum';
 import { Auth } from './decorators/auth.decorators';
+import { ActiveUser } from 'src/common/decorators/active-user.decorators';
 
 interface RequestWithUser extends Request {
   user: {
@@ -38,7 +39,7 @@ export class AuthController {
 
   @Get('profile')
   @Auth(Role.USER)
-  profile(@Req() req: RequestWithUser) {
-    return this.authService.profile(req.user);
+  profile(@ActiveUser()  user) {
+    return this.authService.profile(user);
   }
 }
