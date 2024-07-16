@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { UserActiveInterface } from 'src/common/interfaces/user-active.interface';
 
 @Injectable()
 export class UsersService {
@@ -20,24 +21,36 @@ export class UsersService {
     return this.userRepository.findOneBy({ email });
   }
 
-  findOneByEmailWithPassword(email:string){
+  findOneByEmailWithPassword(email: string) {
     return this.userRepository.findOne({
-      where:{email},
-      select:['id','name','email','password','role']
-    })
-
+      where: { email },
+      select: ['id', 'name', 'email', 'password', 'role'],
+    });
   }
 
   findAll() {
-    return this.userRepository.find()
+    return this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const findingUser = await this.userRepository.findOneBy({
+      id,
+    });
+
+    if (!findingUser) {
+      throw new BadRequestException('User doesnt exist in database');
+    }
+    return findingUser;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    await this.findOne(id);
+
+    return await this.userRepository.update(id, {
+      ...updateUserDto,
+      name: updateUserDto.name,
+      email: updateUserDto.email,
+    });
   }
 
   remove(id: number) {
